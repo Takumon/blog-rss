@@ -33,9 +33,11 @@ const Index = ({ data }) => {
           <PostList
             key={post.id}
             // cover={post.}
+            author={post.author}
+            type={post.type}
             path={post.link}
             title={post.title}
-            date={post.isoDate}
+            date={post.pubDate}
             excerpt={post.excerpt}
           />
         ))}
@@ -90,12 +92,11 @@ export const query = graphql`
           id
           type
           author
-          creator
           title
-          link
-          pubDate
-          content
           excerpt
+          content
+          pubDate
+          link
         }
       }
     }

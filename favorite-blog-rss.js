@@ -1,3 +1,5 @@
+
+
 const TYPE = {
   QIITA: {
     label: 'Qiita',
@@ -11,8 +13,8 @@ const TYPE = {
   NOTE: {
     label: 'note',
   },
-  OTHER: {
-    label: 'Other',
+  GATSBY: {
+    label: 'Gatsby',
   },
 };
 
@@ -34,9 +36,9 @@ const AUTHOR = {
   },
 };
 
-module.exports = [
+const BLOGS = [
   {
-    type: TYPE.OTHER,
+    type: TYPE.GATSBY,
     author: AUTHOR.TAKUMON,
     url : 'https://takumon.com/rss',
   },
@@ -71,3 +73,10 @@ module.exports = [
     url : 'https://qiita.com/charon/feed',
   },
 ];
+
+
+module.exports = {
+  TYPE,
+  AUTHOR,
+  BLOGS,
+}; 

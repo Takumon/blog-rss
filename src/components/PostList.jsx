@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'gatsby';
 import Img from 'gatsby-image';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
@@ -37,7 +36,7 @@ const Wrapper = styled.article`
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
   position: absolute;
   top: 0;
   left: 0;
@@ -105,13 +104,23 @@ const Title = styled.h2`
   margin-bottom: 0.6rem;
 `;
 
-const PostList = ({ cover, path, date, title, excerpt }) => (
+const PostList = ({
+  cover,
+  path,
+  date,
+  title,
+  excerpt,
+  author,
+  type,
+}) => (
   <Wrapper>
     {/* <Image>
       <Img fluid={cover} />
     </Image> */}
-    <StyledLink to={path}>
+    <StyledLink href={path} target="_blank">
       <Info>
+        <span>{author}</span>
+        <span>{type}</span>
         <span>{date}</span>
         <Title>{title}</Title>
         <span>{excerpt}</span>
@@ -122,10 +131,10 @@ const PostList = ({ cover, path, date, title, excerpt }) => (
 
 export default PostList;
 
-PostList.propTypes = {
-  // cover: PropTypes.object.isRequired,
-  path: PropTypes.string.isRequired,
-  excerpt: PropTypes.string,
-  date: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-};
+// PostList.propTypes = {
+//   // cover: PropTypes.object.isRequired,
+//   path: PropTypes.string.isRequired,
+//   excerpt: PropTypes.string,
+//   date: PropTypes.string.isRequired,
+//   title: PropTypes.string.isRequired,
+// };

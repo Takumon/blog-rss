@@ -1,9 +1,9 @@
 const path = require('path');
-const blogInfos = require('./favorite-blog-rss');
+const striptags = require('striptags');
+const { BLOGS } = require('./favorite-blog-rss');
 const crypto = require("crypto");
 const Parser = require('rss-parser');
 const parser = new Parser();
-const striptags = require('striptags');
 
 const INTERNAL_TYPE_BLOG = 'blog';
 const INTERNAL_TYPE_BLOG_POST = 'blogPost';
@@ -17,7 +17,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 };
 
 exports.sourceNodes = async ({ actions, createNodeId }) => {
-  const feeds = await Promise.all(blogInfos.map(blogInfo => {
+  const feeds = await Promise.all(BLOGS.map(blogInfo => {
     const author = blogInfo.author.label;
     const type = blogInfo.type.label;
   
@@ -26,7 +26,11 @@ exports.sourceNodes = async ({ actions, createNodeId }) => {
       author,
       type,
       items: feed.items.map(item => ({
-        ...item,
+        title: item.title,
+        excerpt: excerpt(item.content, 120),
+        content: item.content,
+        pubDate: item.pubDate,
+        link : item.link,
         author,
         type,
       }))
@@ -65,10 +69,10 @@ exports.sourceNodes = async ({ actions, createNodeId }) => {
       .update(JSON.stringify(p))
       .digest('hex');
     
+    const excerpt = 
     actions.createNode({
       ...p,
       id: createNodeId(`${INTERNAL_TYPE_BLOG_POST}${p.link}`),
-      excerpt: excerpt(p.content, 120),
       children: [],
       parent: `__SOURCE__`,
       internal: {
@@ -80,7 +84,11 @@ exports.sourceNodes = async ({ actions, createNodeId }) => {
 };
 
 function excerpt(html, maxLength) {
-  const rowText = striptags(html, '<pre>').replace(/<pre[\s\S]+?>[\s\S]+?<\/pre>/g, '').trim();
+  const rowText = striptags(html, '<pre>')
+    .replace(/<pre[\s\S]+?>[\s\S]+?<\/pre>/g, '')
+    .replace(/\n/g, '')
+    .replace(/ /g, '')
+    .trim();
   return rowText.length >= maxLength
     ? rowText.substring(0, maxLength) + '...'
     : rowText;
