@@ -21,20 +21,22 @@ const PostWrapper = styled.div`
 `;
 
 const Index = ({ data }) => {
-  const { edges } = data.allMarkdownRemark;
+  const blogs = data.allBlog.edges.map(edges => edges.node);
+  const posts = data.allBlogPost.edges.map(edges => edges.node);
+
   return (
     <Layout>
-      <Helmet title={'Home Page'} />
-      <Header title="Home Page">Gatsby Tutorial Starter</Header>
+      <Helmet title={'Tech Incredible Solution'} />
+      <Header title="Tech Incredible Solution">Tech Incredible Solution</Header>
       <PostWrapper>
-        {edges.map(({ node }) => (
+        {posts.map(post => (
           <PostList
-            key={node.id}
-            cover={node.frontmatter.cover.childImageSharp.fluid}
-            path={node.frontmatter.path}
-            title={node.frontmatter.title}
-            date={node.frontmatter.date}
-            excerpt={node.excerpt}
+            key={post.id}
+            // cover={post.}
+            path={post.link}
+            title={post.title}
+            date={post.isoDate}
+            excerpt={post.excerpt}
           />
         ))}
       </PostWrapper>
@@ -44,54 +46,56 @@ const Index = ({ data }) => {
 
 export default Index;
 
-Index.propTypes = {
-  data: PropTypes.shape({
-    allMarkdownRemark: PropTypes.shape({
-      edges: PropTypes.arrayOf(
-        PropTypes.shape({
-          node: PropTypes.shape({
-            excerpt: PropTypes.string,
-            frontmatter: PropTypes.shape({
-              cover: PropTypes.object.isRequired,
-              path: PropTypes.string.isRequired,
-              title: PropTypes.string.isRequired,
-              date: PropTypes.string.isRequired,
-              tags: PropTypes.array,
-            }),
-          }),
-        }).isRequired
-      ),
-    }),
-  }),
-};
+// Index.propTypes = {
+//   data: PropTypes.shape({
+//     allMarkdownRemark: PropTypes.shape({
+//       edges: PropTypes.arrayOf(
+//         PropTypes.shape({
+//           node: PropTypes.shape({
+//             excerpt: PropTypes.string,
+//             frontmatter: PropTypes.shape({
+//               cover: PropTypes.object.isRequired,
+//               path: PropTypes.string.isRequired,
+//               title: PropTypes.string.isRequired,
+//               date: PropTypes.string.isRequired,
+//               tags: PropTypes.array,
+//             }),
+//           }),
+//         }).isRequired
+//       ),
+//     }),
+//   }),
+// };
 
 export const query = graphql`
   query {
-    allMarkdownRemark(
-      limit: 6
-      sort: { order: DESC, fields: [frontmatter___date] }
+    allBlog (
+      sort: { order: ASC, fields: [author] }
     ) {
       edges {
         node {
           id
-          excerpt(pruneLength: 75)
-          frontmatter {
-            title
-            path
-            tags
-            date(formatString: "MM.DD.YYYY")
-            cover {
-              childImageSharp {
-                fluid(
-                  maxWidth: 1000
-                  quality: 90
-                  traceSVG: { color: "#2B2B2F" }
-                ) {
-                  ...GatsbyImageSharpFluid_withWebp_tracedSVG
-                }
-              }
-            }
-          }
+          author
+          link
+          description
+          type
+        }
+      }
+    }
+    allBlogPost (
+      sort: { order: DESC, fields: [pubDate] }
+    ) {
+      edges {
+        node {
+          id
+          type
+          author
+          creator
+          title
+          link
+          pubDate
+          content
+          excerpt
         }
       }
     }

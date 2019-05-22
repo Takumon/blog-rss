@@ -1,97 +1,13 @@
 const path = require('path');
+const blogInfos = require('./favorite-blog-rss');
+const crypto = require("crypto");
+const Parser = require('rss-parser');
+const parser = new Parser();
+const striptags = require('striptags');
 
-exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions;
+const INTERNAL_TYPE_BLOG = 'blog';
+const INTERNAL_TYPE_BLOG_POST = 'blogPost';
 
-  const postTemplate = path.resolve('src/templates/post.jsx');
-  const tagPage = path.resolve('src/pages/tags.jsx');
-  const tagPosts = path.resolve('src/templates/tag.jsx');
-
-  const result = await graphql(
-    `
-      query {
-        allMarkdownRemark(
-          sort: { order: ASC, fields: [frontmatter___date] }
-        ) {
-          edges {
-            node {
-              frontmatter {
-                path
-                title
-                tags
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  if (result.errors) {
-    return reject(result.errors);
-  }
-
-  const posts = result.data.allMarkdownRemark.edges;
-
-  const postsByTag = {};
-  // create tags page
-  posts.forEach(({ node }) => {
-    if (node.frontmatter.tags) {
-      node.frontmatter.tags.forEach(tag => {
-        if (!postsByTag[tag]) {
-          postsByTag[tag] = [];
-        }
-
-        postsByTag[tag].push(node);
-      });
-    }
-  });
-
-  const tags = Object.keys(postsByTag);
-
-  createPage({
-    path: '/tags',
-    component: tagPage,
-    context: {
-      tags: tags.sort(),
-    },
-  });
-
-  //create tags
-  tags.forEach(tagName => {
-    const posts = postsByTag[tagName];
-
-    createPage({
-      path: `/tags/${tagName}`,
-      component: tagPosts,
-      context: {
-        posts,
-        tagName,
-      },
-    });
-  });
-
-  //create posts
-  posts.forEach(({ node }, index) => {
-    const path = node.frontmatter.path;
-    const prev = index === 0 ? null : posts[index - 1].node;
-    const next =
-      index === posts.length - 1 ? null : posts[index + 1].node;
-    createPage({
-      path,
-      component: postTemplate,
-      context: {
-        pathSlug: path,
-        prev,
-        next,
-      },
-    });
-  });
-
-  return 'OK';
-};
-
-/* Allows named imports */
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
@@ -99,3 +15,73 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     },
   });
 };
+
+exports.sourceNodes = async ({ actions, createNodeId }) => {
+  const feeds = await Promise.all(blogInfos.map(blogInfo => {
+    const author = blogInfo.author.label;
+    const type = blogInfo.type.label;
+  
+    return parser.parseURL(blogInfo.url).then(feed => ({
+      ...feed,
+      author,
+      type,
+      items: feed.items.map(item => ({
+        ...item,
+        author,
+        type,
+      }))
+    }))
+  }));
+
+  const blogs = feeds.map(feed => ({
+    title: feed.title,
+    description: feed.description,
+    link: feed.link,
+    lastBuildDate: feed.lastBuildDate,
+    author: feed.author,
+    type: feed.type,
+  }));
+
+  blogs.forEach(b => {
+    const contentDigest = crypto.createHash(`md5`)
+      .update(JSON.stringify(b))
+      .digest('hex');
+    
+    actions.createNode({
+      ...b,
+      id: createNodeId(`${INTERNAL_TYPE_BLOG}${b.link}`),
+      children: [],
+      parent: `__SOURCE__`,
+      internal: {
+        type: INTERNAL_TYPE_BLOG,
+        contentDigest,
+      },
+    });
+  });
+
+  const rssPosts = feeds.map(feed => feed.items).reduce((a,b) => [...a, ...b]);
+  rssPosts.forEach(p => {
+    const contentDigest = crypto.createHash(`md5`)
+      .update(JSON.stringify(p))
+      .digest('hex');
+    
+    actions.createNode({
+      ...p,
+      id: createNodeId(`${INTERNAL_TYPE_BLOG_POST}${p.link}`),
+      excerpt: excerpt(p.content, 120),
+      children: [],
+      parent: `__SOURCE__`,
+      internal: {
+        type: INTERNAL_TYPE_BLOG_POST,
+        contentDigest,
+      },
+    });
+  });
+};
+
+function excerpt(html, maxLength) {
+  const rowText = striptags(html, '<pre>').replace(/<pre[\s\S]+?>[\s\S]+?<\/pre>/g, '').trim();
+  return rowText.length >= maxLength
+    ? rowText.substring(0, maxLength) + '...'
+    : rowText;
+}
