@@ -71,6 +71,8 @@ const StyledLink = styled.a`
   }
 `;
 
+
+
 const Image = styled.div`
   position: absolute;
   top: 0;
@@ -98,12 +100,34 @@ const Info = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 90%;
 `;
 
-const Title = styled.h2`
+
+const Author = styled.div`
+  font-size: 0.6em;
+  width: 100%;
+`;
+const BlogType = styled.div`
+  font-size: 0.6em;
+  width: 100%;
+`;
+const PubDate = styled.div`
+  font-size: 0.6em;
+  width: 100%;
+`;
+
+const Title = styled.h3`
   margin-bottom: 0.6rem;
+  margin-top: 0.6rem;
+  width: 100%;
 `;
 
+
+const Excerpt = styled.div`
+  font-size: 0.6em;
+  width: 100%;
+`
 const PostList = ({
   cover,
   path,
@@ -119,11 +143,11 @@ const PostList = ({
     </Image> */}
     <StyledLink href={path} target="_blank">
       <Info>
-        <span>{author}</span>
-        <span>{type}</span>
-        <span>{date}</span>
+        <Author>{author}</Author>
+        <BlogType>{type}</BlogType>
+        <PubDate>{date}</PubDate>
         <Title>{title}</Title>
-        <span>{excerpt}</span>
+        <Excerpt>{excerpt}</Excerpt>
       </Info>
     </StyledLink>
   </Wrapper>

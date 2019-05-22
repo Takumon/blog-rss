@@ -29,7 +29,7 @@ exports.sourceNodes = async ({ actions, createNodeId }) => {
         title: item.title,
         excerpt: excerpt(item.content, 120),
         content: item.content,
-        pubDate: item.pubDate,
+        pubDate: new Date(item.pubDate).toISOString(),
         link : item.link,
         author,
         type,
