@@ -1,9 +1,12 @@
+const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
 const path = require('path');
 const striptags = require('striptags');
 const { BLOGS } = require('./favorite-blog-rss');
 const crypto = require("crypto");
 const Parser = require('rss-parser');
 const parser = new Parser();
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const INTERNAL_TYPE_BLOG = 'blog';
 const INTERNAL_TYPE_BLOG_POST = 'blogPost';
@@ -16,7 +19,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
   });
 };
 
-exports.sourceNodes = async ({ actions, createNodeId }) => {
+exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   const feeds = await Promise.all(BLOGS.map(blogInfo => {
     const author = blogInfo.author.label;
     const type = blogInfo.type.label;
@@ -64,7 +67,39 @@ exports.sourceNodes = async ({ actions, createNodeId }) => {
   });
 
   const rssPosts = feeds.map(feed => feed.items).reduce((a,b) => [...a, ...b]);
-  rssPosts.forEach(p => {
+
+  const rssPostsWithImageUrl = await Promise.all(rssPosts.map(p =>
+    axios.get(p.link).then(res => {
+      const $ = cheerio.load(res.data)
+  
+      let imageUrl;
+      $('head meta').each((i, el) => {
+        const property = $(el).attr('property')
+        const content = $(el).attr('content')
+        if (property === 'og:image') {
+          imageUrl = content
+        }
+      });
+
+      return {
+        ...p,
+        imageUrl,
+      };
+    })
+  ));
+
+
+  await Promise.all(rssPostsWithImageUrl.map(p =>
+    createRemoteFileNode({
+      url: p.imageUrl,
+      cache,
+      store,
+      createNode: actions.createNode,
+      createNodeId: createNodeId,
+    })
+  ))
+
+  rssPostsWithImageUrl.forEach(p => {
     const contentDigest = crypto.createHash(`md5`)
       .update(JSON.stringify(p))
       .digest('hex');

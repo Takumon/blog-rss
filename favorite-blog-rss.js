@@ -59,8 +59,8 @@ const BLOGS = [
   },
   {
     type: TYPE.HATENA,
-    author: AUTHOR.KIRIMODE,
-    url : 'https://kiririmode.hatenablog.jp/rss',
+    author: AUTHOR.KAZUHIRA,
+    url : 'https://kazuhira-r.hatenablog.com/rss',
   },
   {
     type: TYPE.HATENA,

@@ -138,9 +138,9 @@ const PostList = ({
   type,
 }) => (
   <Wrapper>
-    {/* <Image>
-      <Img fluid={cover} />
-    </Image> */}
+    <Image>
+      <img src={cover} />
+    </Image>
     <StyledLink href={path} target="_blank">
       <Info>
         <Author>{author}</Author>
