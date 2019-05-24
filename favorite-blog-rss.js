@@ -35,7 +35,7 @@ const AUTHOR = {
     label: 'tenten',
     imageUrl: 'https://pbs.twimg.com/profile_images/675557059094384640/cy8EPKbB_400x400.jpg',
   },
-  SUHISHOKUNIN: {
+  SUSHISHOKUNIN: {
     label: 'seko',
     imageUrl: 'https://pbs.twimg.com/profile_images/131683825/twitter5_400x400.png',
   },
@@ -81,7 +81,7 @@ const BLOGS = [
   },
 
   {
-    author: AUTHOR.SUHISHOKUNIN,
+    author: AUTHOR.SUSHISHOKUNIN,
     type: TYPE.HATENA,
     url : 'https://sekom.hatenablog.com/rss',
   },
