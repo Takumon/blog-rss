@@ -71,11 +71,6 @@ const BLOGS = [
 
   {
     author: AUTHOR.KAZUHIRA,
-    type: TYPE.QIITA,
-    url : 'https://qiita.com/charon/feed',
-  },
-  {
-    author: AUTHOR.KAZUHIRA,
     type: TYPE.HATENA,
     url : 'https://kazuhira-r.hatenablog.com/rss',
   },
