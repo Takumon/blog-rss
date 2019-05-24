@@ -2,7 +2,7 @@ const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
 const _uniq = require('lodash.uniq');
 const path = require('path');
 const striptags = require('striptags');
-const { BLOGS } = require('./favorite-blog-rss');
+const { BLOGS, AUTHOR } = require('./favorite-blog-rss');
 const crypto = require("crypto");
 const Parser = require('rss-parser');
 const parser = new Parser();
@@ -22,7 +22,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 
 exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   const feeds = await Promise.all(BLOGS.map(blogInfo => {
-    const author = blogInfo.author.label;
+    const author = blogInfo.author;
     const type = blogInfo.type.label;
   
     return parser.parseURL(blogInfo.url).then(feed => ({
@@ -88,6 +88,32 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
       };
     })
   ));
+
+
+  const authorImageUrls = Object.values(AUTHOR).map(value => value.imageUrl);
+  await Promise.all(authorImageUrls.map(async imageUrl => {
+    const fileNode = await createRemoteFileNode({
+      url: imageUrl,
+      cache,
+      store,
+      createNode: actions.createNode,
+      createNodeId: createNodeId,
+    });
+
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'AuthorImage',
+      value: 'true',
+    });
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'link',
+      value: imageUrl,
+    });
+
+    return fileNode;
+  }));
+
 
   const imageUrls = _uniq(rssPostsWithImageUrl.filter(p => p.imageUrl).map(p => p.imageUrl));
 

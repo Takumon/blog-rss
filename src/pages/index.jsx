@@ -33,7 +33,8 @@ const Index = ({ data }) => {
           <PostList
             key={post.id}
             coverImageUrl={post.imageUrl}
-            author={post.author}
+            authorName={post.author.label}
+            authorImageUrl={post.author.imageUrl}
             type={post.type}
             path={post.link}
             title={post.title}
@@ -71,13 +72,14 @@ export default Index;
 
 export const query = graphql`
   query {
-    allBlog (
-      sort: { order: ASC, fields: [author] }
-    ) {
+    allBlog {
       edges {
         node {
           id
-          author
+          author {
+            label
+            imageUrl
+          }
           link
           description
           type
@@ -91,11 +93,14 @@ export const query = graphql`
         node {
           id
           type
-          author
+          author {
+            label
+            imageUrl
+          }
           title
           excerpt
           content
-          pubDate
+          pubDate(formatString: "YYYY/MM/DD")
           link
           imageUrl
         }

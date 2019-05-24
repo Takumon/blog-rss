@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import theme from '../../config/theme';
 import Thumbnail from './Thumbnail';
+import AuthorImage from './AuthorImage';
 
 const Wrapper = styled.article`
   margin-bottom: 2rem;
@@ -11,7 +12,7 @@ const Wrapper = styled.article`
   border-radius: ${props => props.theme.borderRadius.default};
   box-shadow: ${props => props.theme.shadow.feature.small.default};
   transition: ${props => props.theme.transitions.boom.transition};
-  height: 17rem;
+  min-height: 22rem;
   flex-basis: calc(99.9% * 1 / 3 - 2.5rem);
   max-width: calc(99.9% * 1 / 3 - 2.5rem);
   width: calc(99.9% * 1 / 3 - 2.5rem);
@@ -25,66 +26,42 @@ const Wrapper = styled.article`
     flex-basis: calc(99.9% * 1 / 2 - 1rem);
     max-width: calc(99.9% * 1 / 2 - 1rem);
     width: calc(99.9% * 1 / 2 - 1rem);
-    height: 18rem;
+    min-height: 22rem;
   }
 
   @media (max-width: 700px) {
     flex-basis: 100%;
     max-width: 100%;
     width: 100%;
-    height: 15rem;
+    min-height: 20rem;
   }
 `;
 
 const StyledLink = styled.a`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 1rem;
+  height: 100%;
+  flex-wrap: no-wrap;
+  flex-direction: column;
+  padding: 0;
   z-index: 3;
   border-radius: ${props => props.theme.borderRadius.default};
-  &:after {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.3) 50%,
-      rgba(0, 0, 0, 0.7) 80%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
-    z-index: -10;
-    border-radius: ${theme.borderRadius.default};
-    transition: opacity ${theme.transitions.default.duration};
-  }
+
 `;
 
 
 
 const Image = styled.div`
-  position: absolute;
-  top: 0;
+  position: relative;
   overflow: hidden;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 1;
   object-fit: cover;
-  border-radius: ${props => props.theme.borderRadius.default};
+  box-shadow: 0px 1px 3px -2px grey;
+  width: 100%;
+  height: 9rem;
+  border-radius: 0.3rem 0.3rem 0 0;
+  background: gray;
   img {
-    border-radius: ${props => props.theme.borderRadius.default};
+    border-radius: 0.3rem 0.3rem 0 0 ;
   }
   > div {
     position: static !important;
@@ -95,29 +72,30 @@ const Image = styled.div`
 `;
 
 const Info = styled.div`
-  color: ${props => props.theme.colors.white.light};
+  flex-grow: 1;
+  color: #4f4f4f;
+  font-family: -apple-system-body,BlinkMacSystemFont,Helvetica Neue,Helvetica Sans,Hiragino Kaku Gothic ProN,"Noto Sans Japanese","游ゴシック Medium","Yu Gothic Medium","メイリオ",meiryo,sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-kerning: auto;
+  font-variant-ligatures: none;
   margin: 0 1rem 1.25rem 1.25rem;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
+  margin-top: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   width: 90%;
+  display: flex;
+  flex-wrap: no-wrap;
+  flex-direction: column;
 `;
 
 
-const Author = styled.div`
-  font-size: 0.6em;
-  width: 100%;
-`;
-const BlogType = styled.div`
-  font-size: 0.6em;
-  width: 100%;
-`;
-const PubDate = styled.div`
-  font-size: 0.6em;
-  width: 100%;
-`;
 
 const Title = styled.h3`
+  font-family: -apple-system-body,BlinkMacSystemFont,Helvetica Neue,Helvetica Sans,Hiragino Kaku Gothic ProN,"Noto Sans Japanese","游ゴシック Medium","Yu Gothic Medium","メイリオ",meiryo,sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: bold;
   margin-bottom: 0.6rem;
   margin-top: 0.6rem;
   width: 100%;
@@ -128,26 +106,67 @@ const Excerpt = styled.div`
   font-size: 0.6em;
   width: 100%;
 `
+
+const MetaInfo = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`
+
+const Tags = styled.div`
+  border-top: 0.1px solid #bababa;
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+`;
+
+const Tag = styled.div`
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  border: 0.5px solid gray;
+  height: 20px;
+  line-height: 12px;
+  padding: 4px 10px;
+  border-radius: 10px;
+`;
+
+const PubDate = styled.div`
+  display: flex;
+  font-size: 0.6em;
+  margin-top: 12px;
+  width: 100%;
+`;
+
+
 const PostList = ({
   coverImageUrl,
   path,
   date,
   title,
   excerpt,
-  author,
+  authorName,
+  authorImageUrl,
   type,
 }) => (
   <Wrapper>
-    <Image>
-      <Thumbnail url={coverImageUrl} />
-    </Image>
     <StyledLink href={path} target="_blank">
+      <Image>
+        <Thumbnail url={coverImageUrl} />
+      </Image>
       <Info>
-        <Author>{author}</Author>
-        <BlogType>{type}</BlogType>
-        <PubDate>{date}</PubDate>
         <Title>{title}</Title>
         <Excerpt>{excerpt}</Excerpt>
+        <MetaInfo>
+          <Tags>
+            <AuthorImage url={authorImageUrl} />
+            <Tag>{authorName}</Tag>
+            <Tag>{type}</Tag>
+          </Tags>
+          <PubDate>{date}</PubDate>
+        </MetaInfo>
       </Info>
     </StyledLink>
   </Wrapper>

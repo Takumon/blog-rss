@@ -34,6 +34,7 @@ const Layout = ({ children }) => (
             height: 100%;
             margin: 0;
             padding: 0;
+            background: #f1f1f1;
           }
 
           body {
