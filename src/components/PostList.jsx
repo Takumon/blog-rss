@@ -1,8 +1,8 @@
 import React from 'react';
-import Img from 'gatsby-image';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import theme from '../../config/theme';
+import Thumbnail from './Thumbnail';
 
 const Wrapper = styled.article`
   margin-bottom: 2rem;
@@ -129,7 +129,7 @@ const Excerpt = styled.div`
   width: 100%;
 `
 const PostList = ({
-  cover,
+  coverImageUrl,
   path,
   date,
   title,
@@ -139,7 +139,7 @@ const PostList = ({
 }) => (
   <Wrapper>
     <Image>
-      <img src={cover} />
+      <Thumbnail url={coverImageUrl} />
     </Image>
     <StyledLink href={path} target="_blank">
       <Info>
@@ -156,7 +156,7 @@ const PostList = ({
 export default PostList;
 
 // PostList.propTypes = {
-//   // cover: PropTypes.object.isRequired,
+//   // coverImageUrl: PropTypes.object.isRequired,
 //   path: PropTypes.string.isRequired,
 //   excerpt: PropTypes.string,
 //   date: PropTypes.string.isRequired,

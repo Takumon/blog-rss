@@ -32,7 +32,7 @@ const Index = ({ data }) => {
         {posts.map(post => (
           <PostList
             key={post.id}
-            cover={post.imageUrl}
+            coverImageUrl={post.imageUrl}
             author={post.author}
             type={post.type}
             path={post.link}

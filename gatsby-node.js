@@ -1,4 +1,5 @@
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
+const _uniq = require('lodash.uniq');
 const path = require('path');
 const striptags = require('striptags');
 const { BLOGS } = require('./favorite-blog-rss');
@@ -88,16 +89,30 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
     })
   ));
 
+  const imageUrls = _uniq(rssPostsWithImageUrl.filter(p => p.imageUrl).map(p => p.imageUrl));
 
-  await Promise.all(rssPostsWithImageUrl.map(p =>
-    createRemoteFileNode({
-      url: p.imageUrl,
+  await Promise.all(imageUrls.map(async imageUrl => {
+    const fileNode = await createRemoteFileNode({
+      url: imageUrl,
       cache,
       store,
       createNode: actions.createNode,
       createNodeId: createNodeId,
-    })
-  ))
+    });
+
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'ThumbnailImage',
+      value: 'true',
+    });
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'link',
+      value: imageUrl,
+    });
+
+    return fileNode;
+  }));
 
   rssPostsWithImageUrl.forEach(p => {
     const contentDigest = crypto.createHash(`md5`)
