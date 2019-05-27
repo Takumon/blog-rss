@@ -1,7 +1,13 @@
-import BlogList from './BlogList';
+import Button from './Button';
 import Header from './Header';
+import Post from './Post';
 import PostList from './PostList';
 import SEO from './SEO';
-import TagsBlock from './TagsBlock';
 
-export { BlogList, Header, PostList, SEO, TagsBlock };
+export {
+  Button,
+  Header,
+  PostList,
+  Post,
+  SEO,
+};

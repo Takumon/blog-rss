@@ -25,24 +25,10 @@ const Index = ({ data }) => {
   const posts = data.allBlogPost.edges.map(edges => edges.node);
 
   return (
-    <Layout>
-      <Helmet title={'Tech Incredible Solution'} />
-      <Header title="Tech Incredible Solution">Tech Incredible Solution</Header>
-      <PostWrapper>
-        {posts.map(post => (
-          <PostList
-            key={post.id}
-            coverImageUrl={post.imageUrl}
-            authorName={post.author.label}
-            authorImageUrl={post.author.imageUrl}
-            type={post.type}
-            path={post.link}
-            title={post.title}
-            date={post.pubDate}
-            excerpt={post.excerpt}
-          />
-        ))}
-      </PostWrapper>
+    <Layout title={data.site.siteMetadata.title}>
+      <Helmet title={data.site.siteMetadata.title} />
+      <Header title={data.site.siteMetadata.title}>{data.site.siteMetadata.description}</Header>
+      <PostList posts={posts} />
     </Layout>
   );
 };
@@ -72,6 +58,12 @@ export default Index;
 
 export const query = graphql`
   query {
+    site {
+      siteMetadata {
+        title
+        description
+      } 
+    }
     allBlog {
       edges {
         node {
@@ -81,7 +73,6 @@ export const query = graphql`
             imageUrl
           }
           link
-          description
           type
         }
       }

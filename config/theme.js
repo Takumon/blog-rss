@@ -11,13 +11,13 @@ export const colors = {
     blue: '#2e3246',
   },
   primary: {
-    base: '#3498db',
-    light: '#3e5fbc',
-    dark: '#284187',
+    base: '#12b3c7',
+    light: '#bae9ee',
+    dark: '#1a96ae',
   },
   background: {
-    light: '#3e5fbc',
-    dark: '#284187',
+    light: '#bae9ee',
+    dark: '#1a96ae',
   },
 };
 
@@ -60,21 +60,40 @@ export const theme = {
   gradient,
   shadow,
   breakpoints: {
-    xs: '400px',
-    s: '600px',
+    xs: '375px',
+    s: '768px',
     m: '900px',
     l: '1200px',
   },
   fontFamily: {
     // eslint-disable-next-line
-    body: `Open Sans,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+    body: `'whitneyssm-book', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
     // eslint-disable-next-line
-    heading: `Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+    heading: `'whitneyssm-semibold', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+  },
+  fontSize: {
+    xxsmall: '.625rem', // 10px
+    xsmall: '.75rem', // 12px
+    small: '.875rem', // 14px
+    medium: '1rem', // 16px
+    large: '1.125rem', // 18px,
+    xlarge: '1.5rem', // 24px
+    xxlarge: '2rem', // 32px
+  },
+  letterSpacing: {
+    normal: 0,
+    medium: '.08em',
+    wide: '.12em',
+  },
+  lineHeight: {
+    body: 2,
+    heading: 1.6,
+    article: 2.2,
   },
   layout: {
-    article: '46rem',
-    base: '70rem',
-    big: '83.33333rem',
+    article: '924px',
+    base: '1172px',
+    big: '1280px',
   },
   borderRadius: {
     default: '0.4rem',

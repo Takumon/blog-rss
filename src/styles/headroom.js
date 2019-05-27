@@ -60,6 +60,7 @@ const headroom = css`
         fill: ${theme.colors.black.base};
       }
     }
+    .material-icons,
     span {
       color: ${theme.colors.black.base};
     }
