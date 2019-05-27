@@ -68,6 +68,7 @@ class PostList extends React.Component {
             <Button
               title="More"
               to="#entry"
+              size="small"
               handleClick={this.loadNextPage}
             />
           </div>
