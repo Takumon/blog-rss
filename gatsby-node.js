@@ -27,7 +27,9 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   const feeds = [];
 
-  for(const blogInfo of BLOGS.filter(b => b.type !== TYPE.QIITA )) {
+  
+
+  for(const blogInfo of BLOGS) {
     const author = blogInfo.author;
     const type = blogInfo.type.label;
   
@@ -49,37 +51,7 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
     feeds.push(feed);
   }
   
-
-  // Qiitaは間隔をあけないと503エラーになるのでfor文でsleepしながらリクエストを送る
-  for(const blogInfo of BLOGS.filter(b => b.type === TYPE.QIITA )) {
-    const author = blogInfo.author;
-    const type = blogInfo.type.label;
-  
-
-    console.log('start..')
-    await sleep(5000);
-    console.log('...end')
-  
-    const feed = await parser.parseURL(blogInfo.url).then(feed => ({
-      ...feed,
-      author,
-      type,
-      items: feed.items.map(item => ({
-        title: item.title,
-        excerpt: excerpt(item.content, 120),
-        content: item.content,
-        pubDate: new Date(item.pubDate).toISOString(),
-        link : item.link,
-        author,
-        type,
-      }))
-    }))
-
-    feeds.push(feed);
-  }
-  
-
-
+  console.log('feedは取得した')
 
   const blogs = feeds.map(feed => ({
     title: feed.title,
@@ -107,10 +79,13 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
     });
   });
 
-  const rssPosts = feeds.map(feed => feed.items).reduce((a,b) => [...a, ...b]);
 
-  const rssPostsWithImageUrl = await Promise.all(rssPosts.map(p =>
-    axios.get(p.link, {
+  const rssPosts = feeds.map(feed => feed.items).reduce((a,b) => [...a, ...b]);
+  const rssPostsWithImageUrl = [];
+  for (const p of rssPosts) {
+    console.log('OGP取得するよ', p.link)
+    await sleep(100);
+    const pWithImageUrl = await axios.get(p.link, {
       headers: {'User-Agent': 'something different'},
     }).then(res => {
       const $ = cheerio.load(res.data)
@@ -128,8 +103,13 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
         ...p,
         imageUrl,
       };
-    })
-  ));
+    });
+
+    rssPostsWithImageUrl.push(pWithImageUrl);
+  }
+
+  console.log('OGPは取得した')
+
 
 
   const authorImageUrls = Object.values(AUTHOR).map(value => value.imageUrl);
