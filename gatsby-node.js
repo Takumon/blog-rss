@@ -57,7 +57,7 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   
 
     console.log('start..')
-    await sleep(1000);
+    await sleep(5000);
     console.log('...end')
   
     const feed = await parser.parseURL(blogInfo.url).then(feed => ({
