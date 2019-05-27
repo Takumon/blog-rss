@@ -84,7 +84,7 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   const rssPostsWithImageUrl = [];
   for (const p of rssPosts) {
     console.log('OGP取得するよ', p.link)
-    await sleep(100);
+    await sleep(10);
     const pWithImageUrl = await axios.get(p.link, {
       headers: {'User-Agent': 'something different'},
     }).then(res => {
