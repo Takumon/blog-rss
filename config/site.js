@@ -3,6 +3,7 @@ module.exports = {
   title: 'Tech Incredible Solution', // Navigation and Site Title
   titleAlt: 'Tech Incredible Solution', // Title for JSONLD
   description: 'My favorite blogs',
+  longDescription: 'My favorite blogs',
   url: 'https://favorite-blogs.netlify.com/', // Domain of your site. No trailing slash!
   siteUrl: 'https://favorite-blogs.netlify.com/', // url + pathPrefix
   siteLanguage: 'ja', // Language Tag on <html> element

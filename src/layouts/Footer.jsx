@@ -21,13 +21,10 @@ const Text = styled.div`
   color: ${props => props.theme.colors.white.light};
 `;
 
-const Footer = () => (
+const Footer = ({ title }) => (
   <Wrapper>
     <Text>
-      <span>
-        Gatsby Tutorial Starter -{' '}
-        <a href="https://justinformentin.com">Justin Formentin</a>
-      </span>
+      <span>{title}</span>
     </Text>
   </Wrapper>
 );

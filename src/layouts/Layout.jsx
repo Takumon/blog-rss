@@ -9,7 +9,7 @@ import { NavBar, Footer } from 'layouts';
 import theme from '../../config/theme';
 import headroom from '../styles/headroom';
 
-const Layout = ({ children }) => (
+const Layout = ({ children, title }) => (
   <ThemeProvider theme={theme}>
     <Fragment>
       <Global
@@ -61,7 +61,7 @@ const Layout = ({ children }) => (
       <SEO />
       <NavBar />
       {children}
-      <Footer />
+      <Footer title={title} />
     </Fragment>
   </ThemeProvider>
 );
