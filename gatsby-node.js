@@ -2,15 +2,19 @@ const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
 const _uniq = require('lodash.uniq');
 const path = require('path');
 const striptags = require('striptags');
-const { BLOGS, AUTHOR } = require('./favorite-blog-rss');
+const { BLOGS, AUTHOR, TYPE } = require('./favorite-blog-rss');
 const crypto = require("crypto");
 const Parser = require('rss-parser');
-const parser = new Parser();
+const parser = new Parser({
+  headers: {'User-Agent': 'something different'},
+});
 const axios = require('axios');
 const cheerio = require('cheerio');
 
 const INTERNAL_TYPE_BLOG = 'blog';
 const INTERNAL_TYPE_BLOG_POST = 'blogPost';
+
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
@@ -21,11 +25,13 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 };
 
 exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
-  const feeds = await Promise.all(BLOGS.map(blogInfo => {
+  const feeds = [];
+
+  for(const blogInfo of BLOGS.filter(b => b.type !== TYPE.QIITA )) {
     const author = blogInfo.author;
     const type = blogInfo.type.label;
   
-    return parser.parseURL(blogInfo.url).then(feed => ({
+    const feed = await parser.parseURL(blogInfo.url).then(feed => ({
       ...feed,
       author,
       type,
@@ -39,7 +45,41 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
         type,
       }))
     }))
-  }));
+
+    feeds.push(feed);
+  }
+  
+
+  // Qiitaは間隔をあけないと503エラーになるのでfor文でsleepしながらリクエストを送る
+  for(const blogInfo of BLOGS.filter(b => b.type === TYPE.QIITA )) {
+    const author = blogInfo.author;
+    const type = blogInfo.type.label;
+  
+
+    console.log('start..')
+    await sleep(1000);
+    console.log('...end')
+  
+    const feed = await parser.parseURL(blogInfo.url).then(feed => ({
+      ...feed,
+      author,
+      type,
+      items: feed.items.map(item => ({
+        title: item.title,
+        excerpt: excerpt(item.content, 120),
+        content: item.content,
+        pubDate: new Date(item.pubDate).toISOString(),
+        link : item.link,
+        author,
+        type,
+      }))
+    }))
+
+    feeds.push(feed);
+  }
+  
+
+
 
   const blogs = feeds.map(feed => ({
     title: feed.title,
@@ -70,7 +110,9 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   const rssPosts = feeds.map(feed => feed.items).reduce((a,b) => [...a, ...b]);
 
   const rssPostsWithImageUrl = await Promise.all(rssPosts.map(p =>
-    axios.get(p.link).then(res => {
+    axios.get(p.link, {
+      headers: {'User-Agent': 'something different'},
+    }).then(res => {
       const $ = cheerio.load(res.data)
   
       let imageUrl;
