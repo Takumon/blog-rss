@@ -15,6 +15,7 @@ const SEO = ({ title, desc, banner, pathname, article }) => (
           shortName,
           author,
           siteLanguage,
+          imageUrl,
           logo,
           siteUrl,
           pathPrefix,
@@ -27,7 +28,7 @@ const SEO = ({ title, desc, banner, pathname, article }) => (
       const seo = {
         title: title || defaultTitle,
         description: defaultDescription || desc,
-        image: `${siteUrl}${banner || defaultBanner}`,
+        image: imageUrl,
         url: `${siteUrl}${pathname || '/'}`,
       };
       const realPrefix = pathPrefix === '/' ? '' : pathPrefix;
@@ -140,6 +141,7 @@ const query = graphql`
         shortName
         author
         siteLanguage
+        imageUrl
         logo
         siteUrl: url
         pathPrefix
