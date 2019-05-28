@@ -44,5 +44,56 @@ module.exports = {
       },
     },
     `gatsby-plugin-remove-serviceworker`,
+    {
+      resolve: `gatsby-plugin-feed`,
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [{
+          output: "/rss.xml",
+          serialize: ({ query: { allBlogPost } }) => {
+            return allBlogPost.edges.map(({ node}) => {
+              return Object.assign({}, node.frontmatter, {
+                url: node.link,
+                guid: node.link,
+                title: node.title,
+                description: node.excerpt,
+                date: node.pubDate,
+                pubDate: node.pubDate,
+                custom_elements: [
+                  { 'content:encoded': node.content },
+                ],
+              })
+            })
+          },
+          query: `{
+            allBlogPost (
+              limit: 1000,
+              sort: { order: DESC, fields: [pubDate] }
+            ) {
+              edges {
+                node {
+                  link
+                  title
+                  excerpt
+                  content
+                  pubDate
+                }
+              }
+            }
+          }`,
+        }],
+      },
+    },
   ],
 };

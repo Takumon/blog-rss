@@ -6,6 +6,7 @@ module.exports = {
   longDescription: 'My favorite blogs',
   url: 'https://favorite-blogs.netlify.com/', // Domain of your site. No trailing slash!
   siteUrl: 'https://favorite-blogs.netlify.com/', // url + pathPrefix
+  imageUrl: 'https://favorite-blogs.netlify.com/logo/banner.png',
   siteLanguage: 'ja', // Language Tag on <html> element
   logo: 'static/logo/logo.png', // Used for SEO
   banner: 'static/logo/banner.png',
