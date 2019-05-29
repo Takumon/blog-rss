@@ -18,9 +18,16 @@ const Wrapper = styled.header`
   @media (max-width: ${props => props.theme.breakpoints.s}) {
     height: 330px;
   }
+
   position: relative;
   overflow: hidden;
 `;
+
+const BackImage = styled.div`
+  background-image: url('../logo/ogp.png');
+  background-size: contain;
+  background-position: center;
+`
 
 const Text = styled.div`
   color: ${props => props.theme.colors.white.base};
@@ -44,6 +51,7 @@ const Subtitle = styled.p`
   color: ${props => props.theme.colors.white.light};
 `;
 
+
 const Header = ({ children, title, date, cover }) => (
   <Wrapper>
     {/* <Img fluid={cover || {} || [] || ''} /> */}
@@ -60,7 +68,7 @@ export default Header;
 
 Header.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
-  // cover: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  cover: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   title: PropTypes.oneOfType([
     PropTypes.string,

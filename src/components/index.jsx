@@ -3,6 +3,7 @@ import Header from './Header';
 import Post from './Post';
 import PostList from './PostList';
 import SEO from './SEO';
+import SnsShare from './SnsShare';
 
 export {
   Button,
@@ -10,4 +11,5 @@ export {
   PostList,
   Post,
   SEO,
+  SnsShare,
 };

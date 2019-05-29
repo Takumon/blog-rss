@@ -14,8 +14,8 @@ const StyledLink = styled(Link)`
   align-items: center;
 
   img {
-    margin: 1.5rem 0 1rem;
-    height: 1.5rem;
+    margin: 1rem 0 1rem;
+    height: 2rem;
     transition: ${theme.transitions.default};
     &:hover {
       opacity: 0.7;
@@ -132,7 +132,10 @@ const IconLink = styled.div`
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showMenu: false };
+    this.state = {
+      showMenu: false,
+      headerBackgroud: '',
+    };
   }
 
   toggleMenu = () => {
@@ -142,10 +145,30 @@ export default class Navbar extends React.Component {
   }
 
   render() {
-    const { showMenu } = this.state;
+    const { showMenu,  headerBackgroud } = this.state;
     const { headerWhite } = this.props;
+
     return (
-      <Headroom calcHeightOnResize disableInlineStyles>
+      <Headroom
+        calcHeightOnResize
+        disableInlineStyles
+        onPin={() => console.log('pinned')}
+        onUnpin={() => {
+          console.log('unpinned')
+          this.setState({
+            headerBackgroud: theme.gradient.rightToLeft,
+          });
+        }}
+        onUnfix={() => {
+          console.log('unfix')
+          this.setState({
+            headerBackgroud: '',
+          });
+        }}
+        style={{
+          background: `${headerBackgroud}`
+        }}
+      >
         <StyledLink to="/">
           {headerWhite ? <LogoWhite /> : <img src={logo} alt="Logo" />}
         </StyledLink>

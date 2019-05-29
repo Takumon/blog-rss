@@ -3,7 +3,7 @@ import { graphql } from 'gatsby';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from '@emotion/styled';
-import { Header, PostList } from 'components';
+import { Header, PostList, SnsShare } from 'components';
 import { Layout } from 'layouts';
 
 const PostWrapper = styled.div`
@@ -23,11 +23,17 @@ const PostWrapper = styled.div`
 const Index = ({ data }) => {
   const blogs = data.allBlog.edges.map(edges => edges.node);
   const posts = data.allBlogPost.edges.map(edges => edges.node);
+  const { title, url, twitter, description } = data.site.siteMetadata;
 
   return (
-    <Layout title={data.site.siteMetadata.title}>
-      <Helmet title={data.site.siteMetadata.title} />
-      <Header title={data.site.siteMetadata.title}>{data.site.siteMetadata.description}</Header>
+    <Layout title={title}>
+      <Helmet title={title} />
+      <Header title={title}>{description}</Header>
+      <SnsShare
+        title={`${description} | ${title}`}
+        link={url}
+        twitterUserName={twitter}
+      />
       <PostList posts={posts} />
     </Layout>
   );
@@ -62,6 +68,8 @@ export const query = graphql`
       siteMetadata {
         title
         description
+        url
+        twitter
       } 
     }
     allBlog {
