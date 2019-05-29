@@ -100,7 +100,7 @@ const SEO = ({ title, desc, banner, pathname, article }) => (
 
             {/* Twitter Card */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:creator" content={twitter} />
+            <meta name="twitter:creator" content={`@${twitter}`} />
             <meta name="twitter:title" content={seo.title} />
             <meta name="twitter:description" content={seo.description} />
             <meta name="twitter:image" content={seo.image} />
