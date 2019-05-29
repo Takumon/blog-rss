@@ -17,11 +17,6 @@ const Wrapper = styled.article`
   max-width: calc(99.9% * 1 / 3 - 2.5rem);
   width: calc(99.9% * 1 / 3 - 2.5rem);
 
-  &:hover {
-    box-shadow: ${props => props.theme.shadow.feature.small.hover};
-    transform: scale(1.04);
-  }
-
   @media (max-width: 1000px) {
     flex-basis: calc(99.9% * 1 / 2 - 1rem);
     max-width: calc(99.9% * 1 / 2 - 1rem);
@@ -36,6 +31,27 @@ const Wrapper = styled.article`
     min-height: 20rem;
   }
 `;
+
+const Author = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 12px;
+`;
+
+const AuthorName = styled.h1`
+  margin-bottom: 0;
+  margin-left: 1rem;
+`;
+
+const Heatmap = styled.div`
+  background-color: #a7d5e3;
+  width: 100%;
+  height: 300px;
+`
+
 
 const StyledLink = styled.a`
   position: relative;
@@ -144,21 +160,24 @@ const PubDate = styled.div`
 const Member = ({
   member
 }) => (
-    <div style={{margin: '24px', padding: '8px', }}>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        <AuthorImage url={member.imageUrl} /><h1>{member.name}</h1>
-      </div>
+    <Wrapper>
+      <Heatmap>
+        <Author>
+          <AuthorImage isNormalSize={true} url={member.imageUrl} />
+          <AuthorName>{member.name}</AuthorName>
+        </Author>
+      </Heatmap>
       {member.blogs.map(b => (
         <div style={{margin: '12px', padding: '4px', }}>
           <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>
           {b.posts.slice(0,3).map(p => (
             <div style={{margin: '6px', padding: '2px', }}><a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
-              {p.title}<small>  ---{p.pubDate}</small>
+              {p.title}
             </a></div>
           ))}
         </div>
       ))}
-    </div>
+    </Wrapper>
 );
 
 export default Member;
