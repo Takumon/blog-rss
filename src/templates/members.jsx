@@ -20,10 +20,11 @@ const PostWrapper = styled.div`
   }
 `;
 
-const Members = ({ data }) => {
-  const blogs = data.allBlog.edges.map(edges => edges.node);
-  const posts = data.allBlogPost.edges.map(edges => edges.node);
+const Members = ({ data, pageContext  }) => {
+  // const blogs = data.allBlog.edges.map(edges => edges.node);
+  // const posts = data.allBlogPost.edges.map(edges => edges.node);
   const { title, url, twitter, descriptionForMembers } = data.site.siteMetadata;
+  const { members } = pageContext;
 
   return (
     <Layout title={title}>
@@ -34,7 +35,7 @@ const Members = ({ data }) => {
         link={url}
         twitterUserName={twitter}
       />
-      <MemberList posts={posts} blogs={blogs} />
+      <MemberList members={members} />
     </Layout>
   );
 };
@@ -72,41 +73,6 @@ export const query = graphql`
         url
         twitter
       } 
-    }
-    allBlog {
-      edges {
-        node {
-          id
-          author {
-            label
-            imageUrl
-          }
-          link
-          type
-          title
-          description
-        }
-      }
-    }
-    allBlogPost (
-      sort: { order: DESC, fields: [pubDate] }
-    ) {
-      edges {
-        node {
-          id
-          type
-          author {
-            label
-            imageUrl
-          }
-          title
-          excerpt
-          content
-          pubDate(formatString: "YYYY/MM/DD")
-          link
-          imageUrl
-        }
-      }
     }
   }
 `;

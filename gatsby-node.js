@@ -27,6 +27,7 @@ exports.createPages = async ({ graphql, actions }) => {
         siteMetadata {
           title
           description
+          descriptionForMembers
           url
           twitter
         } 
@@ -41,6 +42,8 @@ exports.createPages = async ({ graphql, actions }) => {
             }
             link
             type
+            title
+            description
           }
         }
       }
@@ -72,10 +75,67 @@ exports.createPages = async ({ graphql, actions }) => {
     return Promise.reject(result.errors)
   }
 
+  const blogs = result.data.allBlog.edges.map(edges => edges.node);
+  const posts = result.data.allBlogPost.edges.map(edges => edges.node);
+
+  const members = [
+    /* 
+    {
+      name: String,
+      imageUrl: String,
+      blogs: [{
+        type: String,
+        link: String,
+        title: String,
+        description: String,
+        posts: {
+          type: String,
+          author {
+            label: String,
+            imageUrl: String,
+          },
+          title: String,
+          excerpt: String,
+          content: String,
+          pubDate: String,
+          link: String,
+          imageUrl: String,
+        }
+      }],      
+    }
+    */ 
+  ];
+
+  blogs.forEach(b => {
+    console.log(b)
+
+    const blogOfMember = {
+      type: b.type,
+      link: b.link,
+      title: b.title,
+      description: b.description,
+      posts: posts.filter(p => p.type === b.type && p.author.label === b.author.label),
+    }
+
+    const name = b.author.label;
+    const targetMember = members.find(m => m.name === name);
+    targetMember
+      ? targetMember.blogs.push(blogOfMember)
+      : members.push({
+        name,
+        imageUrl: b.author.imageUrl,
+        blogs: [blogOfMember],
+      });
+  })
+
+
   // メンバーページ生成
   actions.createPage({
-    path: '/members/',
+    path: '/members',
     component: membersPage,
+    context: {
+      members,
+    }
   });
 
   return 'OK';
@@ -100,7 +160,12 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
     const author = blogInfo.author;
     const type = blogInfo.type.label;
   
-    const feed = await parser.parseURL(blogInfo.url).then(feed => ({
+    const feed = await parser.parseURL(blogInfo.url).then(feed => {
+      if(type === 'Qiita') {
+        feed.link = feed.feedUrl.replace('/feed')
+      }
+        
+      return {
       ...feed,
       author,
       type,
@@ -113,7 +178,10 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
         author,
         type,
       }))
-    }))
+      }
+    });
+
+
 
     feeds.push(feed);
   }

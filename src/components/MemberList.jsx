@@ -32,7 +32,7 @@ class MemberList extends React.Component {
   }
 
   hasNextPage() {
-    return this.state.page * PER_PAGE < this.props.blogs.length;
+    return this.state.page * PER_PAGE < this.props.members.length;
   }
 
   loadNextPage() {
@@ -46,39 +46,12 @@ class MemberList extends React.Component {
   }
 
   render() {
-    const members = [];
-    const { blogs, posts } = this.props;
-
-    blogs.forEach(b => {
-      const name = b.author.label;
-      const targetMember = members.find(m => m.name === name);
-      if (targetMember) {
-        targetMember.blogs.push({
-          type: b.type,
-          link: b.link,
-          title: b.title,
-          description: b.description,
-          posts: posts.filter(p => p.type === b.type && p.auther === b.auther),
-        });
-      } else {
-        members.push({
-          name,
-          imageUrl: b.author.imageUrl,
-          blogs: [{
-            type: b.type,
-            link: b.link,
-            title: b.title,
-            description: b.description,
-            posts: posts.filter(p => p.type === b.type && p.auther === b.auther),
-          }],
-        });
-      }
-    })
+    const { members } = this.props;
     const filtered = members.slice(0, this.state.page * PER_PAGE);
 
     return (
       <MemberWrapper>
-        {members.map(member => <Member {...member} />)}
+        {filtered.map(member => <Member member={member} />)}
         {this.hasNextPage() && (
           <div className="button">
             <Button

@@ -142,30 +142,23 @@ const PubDate = styled.div`
 
 
 const Member = ({
-  name,
-  imageUrl,
-  blogs,
+  member
 }) => (
-  <Wrapper>
-    <div>
-      <AuthorImage url={imageUrl} />
-      <div>{name}</div>
-      {blogs.map(b => (
+    <div style={{margin: '24px', padding: '8px', }}>
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <AuthorImage url={member.imageUrl} /><h1>{member.name}</h1>
+      </div>
+      {member.blogs.map(b => (
         <div style={{margin: '12px', padding: '4px', }}>
-          <div>{b.type}</div>
-          <div>{b.link}</div>
-          <div>{b.title}</div>
-          <div>{b.description}</div>
-          {b.posts.map(p => (
-            <a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
-              <div>{p.title}</div>
-              <div>{p.pubDate}</div>
-            </a>
+          <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>
+          {b.posts.slice(0,3).map(p => (
+            <div style={{margin: '6px', padding: '2px', }}><a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
+              {p.title}<small>  ---{p.pubDate}</small>
+            </a></div>
           ))}
         </div>
       ))}
     </div>
-  </Wrapper>
 );
 
 export default Member;
