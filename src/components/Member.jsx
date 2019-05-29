@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import theme from '../../config/theme';
 import Thumbnail from './Thumbnail';
 import AuthorImage from './AuthorImage';
+import Heatmap from './Heatmap';
 
 const Wrapper = styled.article`
   margin-bottom: 2rem;
@@ -46,7 +47,7 @@ const AuthorName = styled.h1`
   margin-left: 1rem;
 `;
 
-const Heatmap = styled.div`
+const Main = styled.div`
   background-color: #a7d5e3;
   width: 100%;
   height: 300px;
@@ -161,12 +162,13 @@ const Member = ({
   member
 }) => (
     <Wrapper>
-      <Heatmap>
+      <Main>
         <Author>
           <AuthorImage isNormalSize={true} url={member.imageUrl} />
           <AuthorName>{member.name}</AuthorName>
         </Author>
-      </Heatmap>
+        <Heatmap/>
+      </Main>
       {member.blogs.map(b => (
         <div style={{margin: '12px', padding: '4px', }}>
           <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>

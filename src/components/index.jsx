@@ -6,6 +6,7 @@ import Member from './Member';
 import MemberList from './MemberList';
 import SEO from './SEO';
 import SnsShare from './SnsShare';
+import Heatmap from './Heatmap';
 
 export {
   Button,
@@ -16,4 +17,5 @@ export {
   Member,
   SEO,
   SnsShare,
+  Heatmap,
 };
