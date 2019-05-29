@@ -2,9 +2,9 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Post, Button } from 'components';
+import { Member, Button } from 'components';
 
-const PostWrapper = styled.div`
+const MemberWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -21,7 +21,7 @@ const PostWrapper = styled.div`
 
 const PER_PAGE = 30;
 
-class PostList extends React.Component {
+class MemberList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,7 +32,7 @@ class PostList extends React.Component {
   }
 
   hasNextPage() {
-    return this.state.page * PER_PAGE < this.props.posts.length;
+    return this.state.page * PER_PAGE < this.props.blogs.length;
   }
 
   loadNextPage() {
@@ -46,23 +46,39 @@ class PostList extends React.Component {
   }
 
   render() {
-    const filtered = this.props.posts.slice(0, this.state.page * PER_PAGE);
+    const members = [];
+    const { blogs, posts } = this.props;
+
+    blogs.forEach(b => {
+      const name = b.author.label;
+      const targetMember = members.find(m => m.name === name);
+      if (targetMember) {
+        targetMember.blogs.push({
+          type: b.type,
+          link: b.link,
+          title: b.title,
+          description: b.description,
+          posts: posts.filter(p => p.type === b.type && p.auther === b.auther),
+        });
+      } else {
+        members.push({
+          name,
+          imageUrl: b.author.imageUrl,
+          blogs: [{
+            type: b.type,
+            link: b.link,
+            title: b.title,
+            description: b.description,
+            posts: posts.filter(p => p.type === b.type && p.auther === b.auther),
+          }],
+        });
+      }
+    })
+    const filtered = members.slice(0, this.state.page * PER_PAGE);
 
     return (
-      <PostWrapper>
-        {filtered.map(post => (
-          <Post
-            key={post.id}
-            coverImageUrl={post.imageUrl}
-            authorName={post.author.label}
-            authorImageUrl={post.author.imageUrl}
-            type={post.type}
-            path={post.link}
-            title={post.title}
-            date={post.pubDate}
-            excerpt={post.excerpt}
-          />
-        ))}
+      <MemberWrapper>
+        {members.map(member => <Member {...member} />)}
         {this.hasNextPage() && (
           <div className="button">
             <Button
@@ -73,12 +89,12 @@ class PostList extends React.Component {
             />
           </div>
         )}
-      </PostWrapper>
+      </MemberWrapper>
     );
   }
 }
 
-export default PostList;
+export default MemberList;
 
 // Index.propTypes = {
 //   data: PropTypes.shape({
@@ -100,4 +116,3 @@ export default PostList;
 //     }),
 //   }),
 // };
-

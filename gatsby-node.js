@@ -16,6 +16,73 @@ const INTERNAL_TYPE_BLOG_POST = 'blogPost';
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
+
+exports.createPages = async ({ graphql, actions }) => {
+
+  const membersPage =  path.resolve('./src/templates/members.jsx');
+
+  const result = await graphql(`
+    query {
+      site {
+        siteMetadata {
+          title
+          description
+          url
+          twitter
+        } 
+      }
+      allBlog {
+        edges {
+          node {
+            id
+            author {
+              label
+              imageUrl
+            }
+            link
+            type
+          }
+        }
+      }
+      allBlogPost (
+        sort: { order: DESC, fields: [pubDate] }
+      ) {
+        edges {
+          node {
+            id
+            type
+            author {
+              label
+              imageUrl
+            }
+            title
+            excerpt
+            content
+            pubDate(formatString: "YYYY/MM/DD")
+            link
+            imageUrl
+          }
+        }
+      }
+    }`
+  );
+
+  if (result.errors) {
+    console.log(result.errors)
+    return Promise.reject(result.errors)
+  }
+
+  // メンバーページ生成
+  actions.createPage({
+    path: '/members/',
+    component: membersPage,
+  });
+
+  return 'OK';
+}
+
+
+
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
