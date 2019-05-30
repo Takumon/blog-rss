@@ -37,8 +37,8 @@ const processRun = ({pubDate, link, title}) => ({
 });
 
 const Container = styled.div`
-  background-color: #d6d6d6;
-  border: 1px solid #d6d6d6;
+  background-color: white;
+  border: 1px solid white;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
@@ -163,7 +163,7 @@ const Heatmap = ({ postData }) => {
   const numberOfWeeksOfContri = contriByDay.length / 7;
 
   const colorScale = scaleLinear({
-    range: ["#f5f5f5", "#13859b"],
+    range: ["#ebedf0", "#1a96ae"],
     domain: [0, maxContriInADay],
   });
 
