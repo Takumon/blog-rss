@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import theme from '../../config/theme';
 import Thumbnail from './Thumbnail';
 import AuthorImage from './AuthorImage';
+import TypeImage from './TypeImage';
 import Heatmap from './Heatmap';
+import { TYPE } from '../../favorite-blog-rss';
 
 const Wrapper = styled.article`
   margin-bottom: 2rem;
@@ -45,6 +47,8 @@ const Author = styled.div`
 const AuthorName = styled.h1`
   margin-bottom: 0;
   margin-left: 1rem;
+  color: #636363;
+  padding-right: 1rem;
 `;
 
 const Main = styled.div`
@@ -53,113 +57,50 @@ const Main = styled.div`
 `
 
 
-const StyledLink = styled.a`
-  position: relative;
+const TypeImageWrapper = styled.div`
   display: flex;
-  height: 100%;
-  flex-wrap: no-wrap;
-  flex-direction: column;
-  padding: 0;
-  z-index: 3;
-  border-radius: ${props => props.theme.borderRadius.default};
+  flex-direction: row;
+  cursor: pointer;
 
-`;
-
-
-
-const Image = styled.div`
-  position: relative;
-  overflow: hidden;
-  object-fit: cover;
-  box-shadow: 0px 1px 3px -2px grey;
-  width: 100%;
-  height: 9rem;
-  border-radius: 0.3rem 0.3rem 0 0;
-  background: gray;
-  img {
-    border-radius: 0.3rem 0.3rem 0 0 ;
-  }
-  > div {
-    position: static !important;
-  }
-  > div > div {
-    position: static !important;
+  &:hover {
+    color: #12b4c7;
   }
 `;
 
-const Info = styled.div`
-  flex-grow: 1;
-  color: #4f4f4f;
-  font-family: -apple-system-body,BlinkMacSystemFont,Helvetica Neue,Helvetica Sans,Hiragino Kaku Gothic ProN,"Noto Sans Japanese","游ゴシック Medium","Yu Gothic Medium","メイリオ",meiryo,sans-serif;
-  -webkit-font-smoothing: antialiased;
-  font-kerning: auto;
-  font-variant-ligatures: none;
-  margin: 0 1rem 1.25rem 1.25rem;
-  position: relative;
-  margin-top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  display: flex;
-  flex-wrap: no-wrap;
-  flex-direction: column;
-`;
-
-
-
-const Title = styled.h3`
-  font-family: -apple-system-body,BlinkMacSystemFont,Helvetica Neue,Helvetica Sans,Hiragino Kaku Gothic ProN,"Noto Sans Japanese","游ゴシック Medium","Yu Gothic Medium","メイリオ",meiryo,sans-serif;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 0.6rem;
-  margin-top: 0.6rem;
-  width: 100%;
-`;
-
-
-const Excerpt = styled.div`
-  font-size: 0.6em;
-  width: 100%;
-`
-
-const MetaInfo = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-`
-
-const Tags = styled.div`
-  border-top: 0.1px solid #bababa;
-  padding-top: 12px;
-  display: flex;
-  align-items: center;
-  margin-top: 24px;
-`;
-
-const Tag = styled.div`
+const BlogTitle = styled.h4`
   margin-left: 6px;
-  font-size: 10px;
-  font-weight: bold;
-  border: 0.5px solid gray;
-  height: 20px;
-  line-height: 12px;
-  padding: 4px 10px;
-  border-radius: 10px;
+  color: #636363;
+  &:hover {
+    color: #12b4c7;
+  }
 `;
 
-const PubDate = styled.div`
-  display: flex;
-  font-size: 0.6em;
-  margin-top: 12px;
-  width: 100%;
+const BlogDetail = styled.small`
+  margin-top: -18px;
+  display: block;
+  margin-left: 30px;
+  margin-bottom: 24px;
 `;
 
 
-const Member = ({
-  member
-}) => {
+const PostTitle = styled.div`
+  margin: 6px;
+  padding: 2px;
+  padding-left: 12px;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    color: #12b4c7;
+  }
+`;
+
+const PostsWrapper = styled.div`
+  margin: 24px 12px 12px 12px;
+  padding: 4px;
+`
+
+const Member = ({ member }) => {
 
   const postData = []
   member.blogs.forEach(b => {
@@ -173,6 +114,9 @@ const Member = ({
     })
   });
 
+  
+
+
   return (
     <Wrapper>
       <Main>
@@ -182,16 +126,45 @@ const Member = ({
         </Author>
       </Main>
       <Heatmap postData={postData} />
-      {member.blogs.map(b => (
-        <div style={{margin: '12px', padding: '4px', }}>
-          <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>
-          {b.posts.slice(0,3).map(p => (
-            <div style={{margin: '6px', padding: '2px', }}><a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
-              {p.title}
-            </a></div>
-          ))}
-        </div>
-      ))}
+      {member.blogs.map(b => {
+        const typeImageUrl = Object.values(TYPE).find(t => t.label === b.type).imageUrl;
+
+        const Title = (
+          <>
+            <TypeImageWrapper
+              onClick={() => {
+                window.open(b.link)
+              }}
+            >
+              <TypeImage
+                isNormalSize={false} 
+                url={typeImageUrl}
+              />
+              {b.type === 'Gatsby' || b.type === 'はてなブログ'
+                ? <BlogTitle>{b.title}</BlogTitle>
+                : <BlogTitle>{b.type}</BlogTitle>
+              }
+            </TypeImageWrapper>
+            {(b.type === 'Gatsby' || b.type === 'はてなブログ') && b.description
+              ? <BlogDetail>{b.description}</BlogDetail>
+              : <BlogDetail />
+            }
+          </>
+        );
+
+        return (
+          <PostsWrapper>
+            {Title}
+            {b.posts.slice(0,3).map(p => (
+              <PostTitle
+                onClick={() => {
+                  window.open(p.link);
+                }}
+              >{p.title}</PostTitle>
+            ))}
+          </PostsWrapper>
+        );
+      })}
   </Wrapper>
   );
 }

@@ -3,18 +3,23 @@
 const TYPE = {
   QIITA: {
     label: 'Qiita',
+    imageUrl: 'https://pbs.twimg.com/profile_images/1542801560/Qiita_400x400.png',
   },
   HATENA: {
     label: 'はてなブログ',
+    imageUrl: 'https://pbs.twimg.com/profile_images/832417572179939328/sMSK9Con_400x400.jpg',
   },
   MEDIUM: {
     label: 'Midium',
+    imageUrl: 'https://pbs.twimg.com/profile_images/900033008685666305/c6Q38U35_400x400.png',
   },
   NOTE: {
     label: 'note',
+    imageUrl: 'https://pbs.twimg.com/profile_images/1082176698592899072/mGF6VnLc_400x400.jpg',
   },
   GATSBY: {
     label: 'Gatsby',
+    imageUrl: 'https://pbs.twimg.com/profile_images/875556871427375106/Xuq8DypK_400x400.jpg',
   },
 };
 

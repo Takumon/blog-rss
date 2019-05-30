@@ -246,6 +246,30 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   console.log('OGPは取得した')
 
 
+  const typeImageUrls = Object.values(TYPE).map(value => value.imageUrl);
+  await Promise.all(typeImageUrls.map(async imageUrl => {
+    const fileNode = await createRemoteFileNode({
+      url: imageUrl,
+      cache,
+      store,
+      createNode: actions.createNode,
+      createNodeId: createNodeId,
+    });
+
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'TypeImage',
+      value: 'true',
+    });
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'link',
+      value: imageUrl,
+    });
+
+    return fileNode;
+  }));
+
 
   const authorImageUrls = Object.values(AUTHOR).map(value => value.imageUrl);
   await Promise.all(authorImageUrls.map(async imageUrl => {
