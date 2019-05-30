@@ -162,7 +162,7 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
   
     const feed = await parser.parseURL(blogInfo.url).then(feed => {
       if(type === 'Qiita') {
-        feed.link = feed.feedUrl.replace('/feed')
+        feed.link = feed.feedUrl.replace('/feed', '')
       }
         
       return {
