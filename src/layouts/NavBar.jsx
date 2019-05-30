@@ -129,6 +129,8 @@ const IconLink = styled.div`
     }
   }
 `;
+
+
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);
@@ -174,8 +176,12 @@ export default class Navbar extends React.Component {
         </StyledLink>
 
         <nav css={[navStyles, showMenu && showMenuStyles]}>
-          <Link to="/">Post</Link>
-          <Link to="/member">Member</Link>
+          <Link 
+            to="/"
+          >Blog</Link>
+          <Link
+            to="/members"
+          >Member</Link>
         </nav>
         <IconLink onClick={this.toggleMenu} headerWhite={headerWhite}>
           {showMenu ? <span className="material-icons">close</span> : <span className="material-icons">menu</span>}

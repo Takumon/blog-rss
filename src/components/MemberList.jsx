@@ -2,9 +2,9 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Post, Button } from 'components';
+import { Member, Button } from 'components';
 
-const PostWrapper = styled.div`
+const MemberWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -21,7 +21,7 @@ const PostWrapper = styled.div`
 
 const PER_PAGE = 30;
 
-class PostList extends React.Component {
+class MemberList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,7 +32,7 @@ class PostList extends React.Component {
   }
 
   hasNextPage() {
-    return this.state.page * PER_PAGE < this.props.posts.length;
+    return this.state.page * PER_PAGE < this.props.members.length;
   }
 
   loadNextPage() {
@@ -46,23 +46,12 @@ class PostList extends React.Component {
   }
 
   render() {
-    const filtered = this.props.posts.slice(0, this.state.page * PER_PAGE);
+    const { members } = this.props;
+    const filtered = members.slice(0, this.state.page * PER_PAGE);
 
     return (
-      <PostWrapper>
-        {filtered.map(post => (
-          <Post
-            key={post.id}
-            coverImageUrl={post.imageUrl}
-            authorName={post.author.label}
-            authorImageUrl={post.author.imageUrl}
-            type={post.type}
-            path={post.link}
-            title={post.title}
-            date={post.pubDate}
-            excerpt={post.excerpt}
-          />
-        ))}
+      <MemberWrapper>
+        {filtered.map(member => <Member member={member} />)}
         {this.hasNextPage() && (
           <div className="button">
             <Button
@@ -73,12 +62,12 @@ class PostList extends React.Component {
             />
           </div>
         )}
-      </PostWrapper>
+      </MemberWrapper>
     );
   }
 }
 
-export default PostList;
+export default MemberList;
 
 // Index.propTypes = {
 //   data: PropTypes.shape({
@@ -100,4 +89,3 @@ export default PostList;
 //     }),
 //   }),
 // };
-

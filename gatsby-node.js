@@ -16,6 +16,133 @@ const INTERNAL_TYPE_BLOG_POST = 'blogPost';
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
+
+exports.createPages = async ({ graphql, actions }) => {
+
+  const membersPage =  path.resolve('./src/templates/members.jsx');
+
+  const result = await graphql(`
+    query {
+      site {
+        siteMetadata {
+          title
+          description
+          descriptionForMembers
+          url
+          twitter
+        } 
+      }
+      allBlog {
+        edges {
+          node {
+            id
+            author {
+              label
+              imageUrl
+            }
+            link
+            type
+            title
+            description
+          }
+        }
+      }
+      allBlogPost (
+        sort: { order: DESC, fields: [pubDate] }
+      ) {
+        edges {
+          node {
+            id
+            type
+            author {
+              label
+              imageUrl
+            }
+            title
+            excerpt
+            content
+            pubDate(formatString: "YYYY/MM/DD")
+            link
+            imageUrl
+          }
+        }
+      }
+    }`
+  );
+
+  if (result.errors) {
+    console.log(result.errors)
+    return Promise.reject(result.errors)
+  }
+
+  const blogs = result.data.allBlog.edges.map(edges => edges.node);
+  const posts = result.data.allBlogPost.edges.map(edges => edges.node);
+
+  const members = [
+    /* 
+    {
+      name: String,
+      imageUrl: String,
+      blogs: [{
+        type: String,
+        link: String,
+        title: String,
+        description: String,
+        posts: {
+          type: String,
+          author {
+            label: String,
+            imageUrl: String,
+          },
+          title: String,
+          excerpt: String,
+          content: String,
+          pubDate: String,
+          link: String,
+          imageUrl: String,
+        }
+      }],      
+    }
+    */ 
+  ];
+
+  blogs.forEach(b => {
+    console.log(b)
+
+    const blogOfMember = {
+      type: b.type,
+      link: b.link,
+      title: b.title,
+      description: b.description,
+      posts: posts.filter(p => p.type === b.type && p.author.label === b.author.label),
+    }
+
+    const name = b.author.label;
+    const targetMember = members.find(m => m.name === name);
+    targetMember
+      ? targetMember.blogs.push(blogOfMember)
+      : members.push({
+        name,
+        imageUrl: b.author.imageUrl,
+        blogs: [blogOfMember],
+      });
+  })
+
+
+  // メンバーページ生成
+  actions.createPage({
+    path: '/members',
+    component: membersPage,
+    context: {
+      members,
+    }
+  });
+
+  return 'OK';
+}
+
+
+
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
@@ -33,7 +160,12 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
     const author = blogInfo.author;
     const type = blogInfo.type.label;
   
-    const feed = await parser.parseURL(blogInfo.url).then(feed => ({
+    const feed = await parser.parseURL(blogInfo.url).then(feed => {
+      if(type === 'Qiita') {
+        feed.link = feed.feedUrl.replace('/feed')
+      }
+        
+      return {
       ...feed,
       author,
       type,
@@ -46,7 +178,10 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
         author,
         type,
       }))
-    }))
+      }
+    });
+
+
 
     feeds.push(feed);
   }
@@ -110,6 +245,30 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }) => {
 
   console.log('OGPは取得した')
 
+
+  const typeImageUrls = Object.values(TYPE).map(value => value.imageUrl);
+  await Promise.all(typeImageUrls.map(async imageUrl => {
+    const fileNode = await createRemoteFileNode({
+      url: imageUrl,
+      cache,
+      store,
+      createNode: actions.createNode,
+      createNodeId: createNodeId,
+    });
+
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'TypeImage',
+      value: 'true',
+    });
+    await actions.createNodeField({
+      node: fileNode,
+      name: 'link',
+      value: imageUrl,
+    });
+
+    return fileNode;
+  }));
 
 
   const authorImageUrls = Object.values(AUTHOR).map(value => value.imageUrl);

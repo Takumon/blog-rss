@@ -4,7 +4,7 @@ import GatsbyImage from 'gatsby-image';
 import styled from '@emotion/styled';
 
 const normalSize = 42;
-const smallSize = 32;
+const smallSize = 24;
 
 export default ({ url, isNormalSize = false }) => {
   const size = isNormalSize ? normalSize: smallSize;
@@ -21,25 +21,25 @@ export default ({ url, isNormalSize = false }) => {
     query={graphql`
       query {
         smallAllFile: allFile(
-          filter: {fields: {AuthorImage: {eq: "true"}}}
+          filter: {fields: {TypeImage: {eq: "true"}}}
         ){
           edges {
             node {
               childImageSharp {
-                resolutions(width: 32, height: 32) {
+                resolutions(width: 24, height: 24) {
                   ...GatsbyImageSharpResolutions
                 }
               }
               id
               fields {
-                AuthorImage
+                TypeImage
                 link
               }
             }
           }
         }
         normalAllFile: allFile(
-          filter: {fields: {AuthorImage: {eq: "true"}}}
+          filter: {fields: {TypeImage: {eq: "true"}}}
         ){
           edges {
             node {
@@ -50,7 +50,7 @@ export default ({ url, isNormalSize = false }) => {
               }
               id
               fields {
-                AuthorImage
+                TypeImage
                 link
               }
             }
