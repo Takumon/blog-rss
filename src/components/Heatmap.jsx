@@ -37,8 +37,8 @@ const processRun = ({pubDate, link, title}) => ({
 });
 
 const Container = styled.div`
-  background-color: #a7d5e3;
-  border: 1px solid #a7d5e3;
+  background-color: #d6d6d6;
+  border: 1px solid #d6d6d6;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
@@ -105,8 +105,8 @@ const formatContriGrid = (activities, numWeeks) => {
 };
 
 
-const Heatmap = () => {
-  const blogData = [
+const Heatmap = ({ postData }) => {
+  const blogData = postData || [
     {
       pubDate: '2019/5/1',
       link: 'https://favorite-blogs.netlify.com',
@@ -160,14 +160,10 @@ const Heatmap = () => {
   ];
 
   const contriByDay = formatContriGrid(blogData, 20);
-
-  const monthsAlreadyLabeled = {};
-
-  const contriByWeek = chunk(contriByDay, 7);
   const numberOfWeeksOfContri = contriByDay.length / 7;
 
   const colorScale = scaleLinear({
-    range: ["#f5f5f5", "#0032a0"],
+    range: ["#f5f5f5", "#13859b"],
     domain: [0, maxContriInADay],
   });
 

@@ -159,27 +159,42 @@ const PubDate = styled.div`
 
 const Member = ({
   member
-}) => (
-  <Wrapper>
-    <Main>
-      <Author>
-        <AuthorImage isNormalSize={true} url={member.imageUrl} />
-        <AuthorName>{member.name}</AuthorName>
-      </Author>
-    </Main>
-    <Heatmap />
-    {member.blogs.map(b => (
-      <div style={{margin: '12px', padding: '4px', }}>
-        <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>
-        {b.posts.slice(0,3).map(p => (
-          <div style={{margin: '6px', padding: '2px', }}><a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
-            {p.title}
-          </a></div>
-        ))}
-      </div>
-    ))}
+}) => {
+
+  const postData = []
+  member.blogs.forEach(b => {
+    b.posts.forEach(p => {
+      postData.push({
+        title: p.title,
+        link: p.link,
+        pubDate: p.pubDate,
+        type: p.type,
+      });
+    })
+  });
+
+  return (
+    <Wrapper>
+      <Main>
+        <Author>
+          <AuthorImage isNormalSize={true} url={member.imageUrl} />
+          <AuthorName>{member.name}</AuthorName>
+        </Author>
+      </Main>
+      <Heatmap postData={postData} />
+      {member.blogs.map(b => (
+        <div style={{margin: '12px', padding: '4px', }}>
+          <h2><a href={b.link} target="_blank" >{b.type === 'Gatsby' || b.type === 'はてなブログ' ? b.title + ' - ' + b.type : b.type}</a> <small>{b.description}</small></h2>
+          {b.posts.slice(0,3).map(p => (
+            <div style={{margin: '6px', padding: '2px', }}><a href={p.link} target="_blank" style={{margin: '12px', padding: '4px', }}>
+              {p.title}
+            </a></div>
+          ))}
+        </div>
+      ))}
   </Wrapper>
-);
+  );
+}
 
 export default Member;
 
