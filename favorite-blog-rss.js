@@ -148,6 +148,11 @@ const BLOGS = [
     type: TYPE.QIITA,
     url : 'https://qiita.com/BooookStore/feed',
   },
+  {
+    author: AUTHOR.BOOKSTORE,
+    type: TYPE.MEDIUM,
+    url : 'https://medium.com/feed/@bau1537',
+  },
 
   {
     author: AUTHOR.KASAI,
