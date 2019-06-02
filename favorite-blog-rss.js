@@ -151,7 +151,7 @@ const BLOGS = [
   {
     author: AUTHOR.BOOKSTORE,
     type: TYPE.MEDIUM,
-    url : 'https://medium.com/@bau1537',
+    url : 'https://medium.com/feed/@bau1537',
   },
 
   {
