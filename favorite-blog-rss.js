@@ -19,7 +19,7 @@ const TYPE = {
   },
   GATSBY: {
     label: 'Gatsby',
-    imageUrl: 'https://pbs.twimg.com/profile_images/875556871427375106/Xuq8DypK_400x400.jpg',
+    imageUrl: 'https://pbs.twimg.com/profile_images/1135999619781939201/HZ-pCQcP_400x400.png',
   },
 };
 
