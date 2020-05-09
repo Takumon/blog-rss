@@ -3,7 +3,7 @@
 const TYPE = {
   QIITA: {
     label: 'Qiita',
-    imageUrl: 'https://pbs.twimg.com/profile_images/1542801560/Qiita_400x400.png',
+    imageUrl: 'https://pbs.twimg.com/profile_images/1201406146822557696/ewFFvnAa_400x400.jpg',
   },
   HATENA: {
     label: 'はてなブログ',
@@ -113,30 +113,11 @@ const BLOGS = [
     type: TYPE.HATENA,
     url : 'https://sekom.hatenablog.com/rss',
   },
-
-  {
-    author: AUTHOR.TENTEN,
-    type: TYPE.QIITA,
-    url : 'https://qiita.com/tenten0213/feed',
-  },
-  {
-    author: AUTHOR.TENTEN,
-    type: TYPE.HATENA,
-    url : 'http://tenten0213.hatenablog.com/rss',
-  },
-
   {
     author: AUTHOR.YOSHIP,
     type: TYPE.QIITA,
     url : 'https://qiita.com/r-nouchi/feed',
   },
-
-  {
-    author: AUTHOR.HONDA,
-    type: TYPE.QIITA,
-    url : 'https://qiita.com/hondaYoshitaka/feed',
-  },
-
   {
     author: AUTHOR.URAGAMI,
     type: TYPE.QIITA,
@@ -153,19 +134,6 @@ const BLOGS = [
     type: TYPE.MEDIUM,
     url : 'https://medium.com/feed/@bau1537',
   },
-
-  {
-    author: AUTHOR.KASAI,
-    type: TYPE.HATENA,
-    url : 'http://zypressen.hatenablog.com/rss',
-  },
-
-  {
-    author: AUTHOR.HIROOKA,
-    type: TYPE.QIITA,
-    url : 'https://qiita.com/hirooka0527/feed',
-  },
-
   {
     author: AUTHOR.SUGIMOTO,
     type: TYPE.QIITA,
