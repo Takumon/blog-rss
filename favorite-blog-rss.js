@@ -36,10 +36,6 @@ const AUTHOR = {
     label: 'kazuhira',
     imageUrl: 'https://pbs.twimg.com/profile_images/1108689203137662977/VEYMGXO1_400x400.jpg',
   },
-  TENTEN: {
-    label: 'tenten',
-    imageUrl: 'https://pbs.twimg.com/profile_images/675557059094384640/cy8EPKbB_400x400.jpg',
-  },
   SUSHISHOKUNIN: {
     label: 'seko',
     imageUrl: 'https://pbs.twimg.com/profile_images/131683825/twitter5_400x400.png',
@@ -48,25 +44,13 @@ const AUTHOR = {
     label: 'yoshi-p',
     imageUrl: 'https://avatars2.githubusercontent.com/u/28617080?v=4',
   },
-  HONDA: {
-    label: 'honda',
-    imageUrl: 'https://pbs.twimg.com/profile_images/1382551749/______240x_400x400.jpg',
-  },
   URAGAMI: {
     label: 'uragami',
-    imageUrl: 'https://pbs.twimg.com/profile_images/818418475299262464/V42CEbIN_400x400.jpg',
+    imageUrl: 'https://pbs.twimg.com/profile_images/1182266348509917184/WSIsEJSd_400x400.jpg'
   },
   BOOKSTORE: {
     label: 'BookStore',
     imageUrl: 'https://pbs.twimg.com/profile_images/967320814566588417/Xr5u7k7c_400x400.jpg',
-  },
-  KASAI: {
-    label: 'kasai',
-    imageUrl: 'https://pbs.twimg.com/profile_images/1028848099580493824/Bwa42Mhi_400x400.jpg',
-  },
-  HIROOKA: {
-    label: 'hirooka',
-    imageUrl: 'https://pbs.twimg.com/profile_images/984232851494191104/xdDTxDPn_400x400.jpg',
   },
   SUGIMOTO: {
     label: 'sugimoto',
